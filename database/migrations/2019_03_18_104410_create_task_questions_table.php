@@ -15,8 +15,16 @@ class CreateTaskQuestionsTable extends Migration
     {
         Schema::create('task_questions', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('task_id');
+            $table->unsignedBigInteger('question_id');
+            $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade')->onUpdate('no action');
+            $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade')->onUpdate('no action');
         });
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
