@@ -15,7 +15,9 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string("task_key", 254);
             $table->string('user_email', 254);
+            $table->string('user_name', 150);
             $table->string('task_title', 100);
             $table->string('task_status', 10)->default('pending');
             $table->timestamps();

@@ -10660,3 +10660,56 @@ a.text-dark:focus {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
+.card {
+  border: transparent;
+  margin-top: 20px;
+}
+
+.card-body {
+  background-color: #fff;
+}
+
+.title {
+  font-weight: bold;
+  color: #515151;
+  font-size: 14px;
+  font-family: Nunito, sans-serif;
+}
+
+.task-title {
+  font-weight: bold;
+  color: #ff6714;
+  font-size: 27px;
+  font-family: Nunito, sans-serif;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.task-details-item {
+  font-size: 12px;
+  color: #919191;
+  margin-top: 5px;
+}
+
+.option-total {
+  font-weight: bold;
+}
+
+.instructions-title {
+  font-weight: bold;
+  color: #515151;
+  font-size: 21px;
+  font-family: Nunito, sans-serif;
+  margin-bottom: 20px;
+}
+
+.instructions-list > li {
+  color: #6f6f6f;
+  margin-bottom: 10px;
+}
+
+.start-button {
+  border-radius: 15px;
+  padding: 10px;
+}
+
