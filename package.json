@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-      "react-router-dom": "latest"
+      "react-router-dom": "latest",
+      "sweetalert": "^2.1.2"
   }
 }

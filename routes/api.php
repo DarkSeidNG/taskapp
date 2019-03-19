@@ -14,5 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['prefix' => 'v1', 'middleware' => 'api'], function() {
+    Route::get('/questions', 'API\v1\QuestionController@index');
 
+    Route::post('/tasks/new', 'API\v1\TaskController@store');
 });

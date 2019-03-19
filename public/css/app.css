@@ -10669,6 +10669,14 @@ a.text-dark:focus {
   background-color: #fff;
 }
 
+.title-centered {
+  font-weight: bold;
+  color: #515151;
+  font-size: 24px;
+  text-align: center;
+  font-family: Nunito, sans-serif;
+}
+
 .title {
   font-weight: bold;
   color: #515151;
@@ -10711,5 +10719,12 @@ a.text-dark:focus {
 .start-button {
   border-radius: 15px;
   padding: 10px;
+}
+
+.welcome-body {
+  font-size: 20px;
+  font-weight: 200;
+  text-align: center;
+  color: #828282;
 }
 
