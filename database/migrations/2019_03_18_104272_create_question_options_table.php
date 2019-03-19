@@ -15,8 +15,15 @@ class CreateQuestionOptionsTable extends Migration
     {
         Schema::create('question_options', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('question_id');
+            $table->text('question_option');
+            $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('question_id')->references('id')->on('questions')->onDelete('cascade')->onUpdate('no action');
         });
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

@@ -15,8 +15,18 @@ class CreateUserAnswersTable extends Migration
     {
         Schema::create('user_answers', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger("task_question_id");
+            $table->unsignedBigInteger("selected_question_option_id")->nullable();
+            $table->text("text_answer")->nullable();
+            $table->string("answer_type");
+            $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign('task_question_id')->references('id')->on('task_questions')->onDelete('cascade')->onUpdate('no action');
+            $table->foreign('selected_question_option_id')->references('id')->on('question_options')->onDelete('cascade')->onUpdate('no action');
         });
+
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
