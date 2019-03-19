@@ -66557,8 +66557,9 @@ function (_Component) {
           type: "checkbox",
           name: "questions[]",
           value: question.id,
+          checked: "checked",
           onChange: _this4.onCheckboxChange
-        }), question.question));
+        }), question.question, " - (", question.question_type, ")"));
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Card__WEBPACK_IMPORTED_MODULE_2__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "submit",
         className: "start-button btn btn-success col-md-12"
