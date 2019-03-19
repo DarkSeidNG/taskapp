@@ -17,13 +17,12 @@ class TaskResource extends JsonResource
 
         return [
             "id" => $this->id,
-            "task_key" => $this->question,
-            "user_email" => $this->question_type,
-            "user_name" => $this->question_type,
-            "task_title" => $this->question_type,
-            "task_status" => $this->question_type,
-            "user_email" => $this->question_type,
-            "user_email" => $this->question_type,
+            "task_key" => $this->task_key,
+            "user_email" => $this->user_email,
+            "user_name" => $this->user_name,
+            "task_title" => $this->task_title,
+            "task_status" => $this->task_status,
+            "questions" => TaskQuestionResource::collection($this->questions),
         ];
     }
 }

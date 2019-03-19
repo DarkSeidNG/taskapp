@@ -165,7 +165,6 @@ export default class CreateTaskPage extends Component {
                                             type="checkbox"
                                             name="questions[]"
                                             value={question.id}
-                                            checked="checked"
                                             onChange={this.onCheckboxChange}
                                         />
                                         {question.question} - ({question.question_type})

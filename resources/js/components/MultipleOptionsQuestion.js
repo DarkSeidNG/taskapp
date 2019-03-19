@@ -2,6 +2,22 @@ import React, { Component } from 'react';
 import Card from './Card';
 
 export default class MultipleOptionsQuestion extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedOption: '',
+        };
+
+        this.handleOptionChange = this.handleOptionChange.bind(this)
+    }
+
+    handleOptionChange (e) {
+        this.setState({
+            selectedOption: e.target.value
+        });
+        this.props.onOptionSelected(e.target.value);
+    }
+
     render() {
         const props = this.props;
         return (
@@ -14,8 +30,13 @@ export default class MultipleOptionsQuestion extends Component {
                         return (
                             <div className="radio" key={idx}>
                                 <label>
-                                    <input type="radio" name="answer-option" value={option.id}/>
-                                    {option.option}
+                                    <input
+                                        type="radio"
+                                        name="answer-option"
+                                        onChange={this.handleOptionChange}
+                                        checked={this.state.selectedOption == option.id}
+                                        value={option.id}/>
+                                    &emsp;{option.question_option}
                                 </label>
                             </div>
                         )

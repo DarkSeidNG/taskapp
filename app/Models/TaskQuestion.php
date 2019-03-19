@@ -10,6 +10,10 @@ class TaskQuestion extends Model
         return $this->belongsTo('App\Models\Task');
     }
 
+    public function question(){
+        return $this->belongsTo('App\Models\Question');
+    }
+
     public function userAnswer(){
         return $this->hasOne('App\Models\UserAnswer');
     }

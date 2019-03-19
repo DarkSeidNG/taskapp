@@ -60420,7 +60420,7 @@ if (false) {} else {
 /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
   \***************************************************************/
-/*! exports provided: BrowserRouter, HashRouter, Link, NavLink, MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, generatePath, matchPath, withRouter, __RouterContext */
+/*! exports provided: MemoryRouter, Prompt, Redirect, Route, Router, StaticRouter, Switch, generatePath, matchPath, withRouter, __RouterContext, BrowserRouter, HashRouter, Link, NavLink */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -65662,6 +65662,12 @@ var tasks = {
   },
   save: function save(task) {
     return _Api__WEBPACK_IMPORTED_MODULE_0__["default"].post('tasks/new', task);
+  },
+  taskDetails: function taskDetails(taskKey) {
+    return _Api__WEBPACK_IMPORTED_MODULE_0__["default"].get('tasks/' + taskKey);
+  },
+  answer: function answer(task) {
+    return _Api__WEBPACK_IMPORTED_MODULE_0__["default"].post('tasks/question/answer', task);
   }
 };
 
@@ -65963,9 +65969,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -65979,13 +65985,22 @@ var FreeTextQuestion =
 function (_Component) {
   _inherits(FreeTextQuestion, _Component);
 
-  function FreeTextQuestion() {
+  function FreeTextQuestion(props) {
+    var _this;
+
     _classCallCheck(this, FreeTextQuestion);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(FreeTextQuestion).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(FreeTextQuestion).call(this, props));
+    _this.handleTextChange = _this.handleTextChange.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(FreeTextQuestion, [{
+    key: "handleTextChange",
+    value: function handleTextChange(e) {
+      this.props.onAnswerChanged(e.target.value);
+    }
+  }, {
     key: "render",
     value: function render() {
       var props = this.props;
@@ -65995,9 +66010,12 @@ function (_Component) {
         className: "question-number"
       }, props.questionNumber, ".) "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
         className: "question"
-      }, " ", props.question, " "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+      }, " ", props.question, " "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "radio"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
         className: "form-control",
-        name: "free-text-answer"
+        name: "free-text-answer",
+        onChange: this.handleTextChange
       }))));
     }
   }]);
@@ -66179,9 +66197,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -66195,15 +66213,32 @@ var MultipleOptionsQuestion =
 function (_Component) {
   _inherits(MultipleOptionsQuestion, _Component);
 
-  function MultipleOptionsQuestion() {
+  function MultipleOptionsQuestion(props) {
+    var _this;
+
     _classCallCheck(this, MultipleOptionsQuestion);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(MultipleOptionsQuestion).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(MultipleOptionsQuestion).call(this, props));
+    _this.state = {
+      selectedOption: ''
+    };
+    _this.handleOptionChange = _this.handleOptionChange.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(MultipleOptionsQuestion, [{
+    key: "handleOptionChange",
+    value: function handleOptionChange(e) {
+      this.setState({
+        selectedOption: e.target.value
+      });
+      this.props.onOptionSelected(e.target.value);
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       var props = this.props;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Card__WEBPACK_IMPORTED_MODULE_1__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "question-container"
@@ -66218,8 +66253,10 @@ function (_Component) {
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           type: "radio",
           name: "answer-option",
+          onChange: _this2.handleOptionChange,
+          checked: _this2.state.selectedOption == option.id,
           value: option.id
-        }), option.option));
+        }), "\u2003", option.question_option));
       })));
     }
   }]);
@@ -66557,7 +66594,6 @@ function (_Component) {
           type: "checkbox",
           name: "questions[]",
           value: question.id,
-          checked: "checked",
           onChange: _this4.onCheckboxChange
         }), question.question, " - (", question.question_type, ")"));
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Card__WEBPACK_IMPORTED_MODULE_2__["default"], null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -66667,6 +66703,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_FreeTextQuestion__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/FreeTextQuestion */ "./resources/js/components/FreeTextQuestion.js");
 /* harmony import */ var _components_MultipleOptionsQuestion__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/MultipleOptionsQuestion */ "./resources/js/components/MultipleOptionsQuestion.js");
 /* harmony import */ var _components_BottomRightFloatButtonCard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/BottomRightFloatButtonCard */ "./resources/js/components/BottomRightFloatButtonCard.js");
+/* harmony import */ var _api_Services_Tasks__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../api/Services/Tasks */ "./resources/js/api/Services/Tasks.js");
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
+/* harmony import */ var sweetalert__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(sweetalert__WEBPACK_IMPORTED_MODULE_7__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
@@ -66696,6 +66735,8 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
+
 var QuestionsPage =
 /*#__PURE__*/
 function (_Component) {
@@ -66713,51 +66754,108 @@ function (_Component) {
         question_type: ""
       }],
       question_index: 0,
-      can_next: true
+      can_next: true,
+      title: '',
+      userName: '',
+      multiOption: 0,
+      freeText: 0,
+      lastAnswer: ''
     };
     _this.onNextClick = _this.onNextClick.bind(_assertThisInitialized(_this));
+    _this.loadTaskDetails = _this.loadTaskDetails.bind(_assertThisInitialized(_this));
+    _this.processLoadedData = _this.processLoadedData.bind(_assertThisInitialized(_this));
+    _this.onAnswerChange = _this.onAnswerChange.bind(_assertThisInitialized(_this));
+    _this.handleNext = _this.handleNext.bind(_assertThisInitialized(_this));
     return _this;
   }
 
   _createClass(QuestionsPage, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      for (var i = 0; i < 10; i++) {
-        this.setState({
-          questions: [{
-            question: "What is your name?",
-            question_type: "multi-option",
-            options: [{
-              id: 1,
-              option: "opos"
-            }, {
-              id: 2,
-              option: "bravos"
-            }]
-          }, {
-            question: "What is your fathers name?",
-            question_type: "multi-option",
-            options: [{
-              id: 1,
-              option: "kikus"
-            }, {
-              id: 2,
-              option: "fructas"
-            }]
-          }, {
-            question: "What is your mothers full name?",
-            question_type: "free-text"
-          }]
-        });
+      this.loadTaskDetails();
+    }
+  }, {
+    key: "loadTaskDetails",
+    value: function loadTaskDetails() {
+      var _this2 = this;
+
+      var taskKey = this.props.match.params.id;
+      _api_Services_Tasks__WEBPACK_IMPORTED_MODULE_6__["tasks"].taskDetails(taskKey).then(function (res) {
+        console.log(res.data);
+
+        if (res.data !== null) {
+          _this2.processLoadedData(res.data);
+        }
+      }).catch(function (err) {
+        console.log(err);
+      });
+    }
+  }, {
+    key: "processLoadedData",
+    value: function processLoadedData(data) {
+      var _title = data.task_title;
+      var _userName = data.user_name;
+      var _multiOption = 0;
+      var _freeText = 0;
+      var _questions = data.questions;
+
+      for (var i = 0; i < data.questions.length; i++) {
+        if (data.questions[i]['question'].question_type === "multi-option") {
+          _multiOption += 1;
+        } else {
+          _freeText += 1;
+        }
       }
+
+      this.setState({
+        title: _title,
+        userName: _userName,
+        multiOption: _multiOption,
+        freeText: _freeText,
+        questions: _questions
+      });
     }
   }, {
     key: "onNextClick",
     value: function onNextClick() {
+      var _this3 = this;
+
+      if (this.state.lastAnswer !== '') {
+        var userAnswer = {
+          task_question_id: this.state.questions[this.state.question_index].id,
+          answer_type: this.state.questions[this.state.question_index]['question'].question_type,
+          answer: this.state.lastAnswer
+        };
+        _api_Services_Tasks__WEBPACK_IMPORTED_MODULE_6__["tasks"].answer(userAnswer).then(function (res) {
+          console.log(res.data);
+
+          if (res.data.status === "success") {
+            _this3.handleShowModal("Answer Saved", res.data.message, res.data.status);
+
+            _this3.handleNext();
+          } else if (res.data.status === "error") {
+            _this3.handleShowModal("Answer Saved", res.data.message, res.data.status);
+          }
+        }).catch(function (err) {
+          console.log(err);
+        });
+      } else {
+        alert("Please answer the question before saving");
+      }
+    }
+  }, {
+    key: "handleShowModal",
+    value: function handleShowModal(title, message, status) {
+      sweetalert__WEBPACK_IMPORTED_MODULE_7___default()(title, message, status);
+    }
+  }, {
+    key: "handleNext",
+    value: function handleNext() {
       if (this.state.questions.length > this.state.question_index + 1) {
         this.setState(_objectSpread({}, this.state, {
           question_index: this.state.question_index + 1,
-          can_next: true
+          can_next: true,
+          lastAnswer: ''
         }));
       } else {
         this.setState(_objectSpread({}, this.state, {
@@ -66766,20 +66864,31 @@ function (_Component) {
       }
     }
   }, {
+    key: "onAnswerChange",
+    value: function onAnswerChange(answer) {
+      this.setState(_objectSpread({}, this.state, {
+        lastAnswer: answer
+      }));
+      console.log(answer);
+    }
+  }, {
     key: "render",
     value: function render() {
-      var selectedQuestion = this.state.questions[this.state.question_index];
+      var selectedQuestion = this.state.questions[this.state.question_index]['question'];
+      var state = this.state;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_HeaderCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        taskTitle: "Senior Software Developer",
-        multiOptionQuestions: "3",
-        freeTextQuestion: "1"
+        taskTitle: state.title,
+        multiOptionQuestions: state.multiOption,
+        freeTextQuestion: state.freeText
       }), selectedQuestion.question_type === "multi-option" ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_MultipleOptionsQuestion__WEBPACK_IMPORTED_MODULE_4__["default"], {
         questionNumber: this.state.question_index + 1,
         question: selectedQuestion.question,
-        options: selectedQuestion.options
+        options: selectedQuestion.question_options,
+        onOptionSelected: this.onAnswerChange
       }) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_FreeTextQuestion__WEBPACK_IMPORTED_MODULE_3__["default"], {
         questionNumber: this.state.question_index + 1,
-        question: selectedQuestion.question
+        question: selectedQuestion.question,
+        onAnswerChanged: this.onAnswerChange
       }), this.state.can_next ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_BottomRightFloatButtonCard__WEBPACK_IMPORTED_MODULE_5__["default"], {
         text: "Save & Continue",
         clickMethod: this.onNextClick
@@ -66944,11 +67053,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return TaskInstructionsPage; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _components_HeaderCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/HeaderCard */ "./resources/js/components/HeaderCard.js");
-/* harmony import */ var _components_InstructionsCard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/InstructionsCard */ "./resources/js/components/InstructionsCard.js");
-/* harmony import */ var _components_BottomButtonCard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/BottomButtonCard */ "./resources/js/components/BottomButtonCard.js");
+/* harmony import */ var _components_HeaderCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/HeaderCard */ "./resources/js/components/HeaderCard.js");
+/* harmony import */ var _components_InstructionsCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/InstructionsCard */ "./resources/js/components/InstructionsCard.js");
+/* harmony import */ var _components_BottomButtonCard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/BottomButtonCard */ "./resources/js/components/BottomButtonCard.js");
+/* harmony import */ var _api_Services_Tasks__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../api/Services/Tasks */ "./resources/js/api/Services/Tasks.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -66959,9 +67067,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -66978,23 +67086,79 @@ var TaskInstructionsPage =
 function (_Component) {
   _inherits(TaskInstructionsPage, _Component);
 
-  function TaskInstructionsPage() {
+  function TaskInstructionsPage(props) {
+    var _this;
+
     _classCallCheck(this, TaskInstructionsPage);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(TaskInstructionsPage).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(TaskInstructionsPage).call(this, props));
+    _this.state = {
+      title: '',
+      userName: '',
+      multiOption: 0,
+      freeText: 0
+    };
+    _this.loadTaskDetails = _this.loadTaskDetails.bind(_assertThisInitialized(_this));
+    _this.processLoadedData = _this.processLoadedData.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(TaskInstructionsPage, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.loadTaskDetails();
+    }
+  }, {
+    key: "loadTaskDetails",
+    value: function loadTaskDetails() {
+      var _this2 = this;
+
+      var taskKey = this.props.match.params.id;
+      _api_Services_Tasks__WEBPACK_IMPORTED_MODULE_4__["tasks"].taskDetails(taskKey).then(function (res) {
+        console.log(res.data);
+
+        if (res.data !== null) {
+          _this2.processLoadedData(res.data);
+        }
+      }).catch(function (err) {
+        console.log(err);
+      });
+    }
+  }, {
+    key: "processLoadedData",
+    value: function processLoadedData(data) {
+      var _title = data.task_title;
+      var _userName = data.user_name;
+      var _multiOption = 0;
+      var _freeText = 0;
+
+      for (var i = 0; i < data.questions.length; i++) {
+        if (data.questions[i].question_type === "multi-option") {
+          _multiOption += 1;
+        } else {
+          _freeText += 1;
+        }
+      }
+
+      this.setState({
+        title: _title,
+        userName: _userName,
+        multiOption: _multiOption,
+        freeText: _freeText
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_HeaderCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        taskTitle: "Senior Software Developer",
-        multiOptionQuestions: "3",
-        freeTextQuestion: "1"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_InstructionsCard__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        multiOptionQuestions: "3",
-        freeTextQuestion: "1"
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_BottomButtonCard__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      var state = this.state;
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_HeaderCard__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        taskTitle: state.title,
+        multiOptionQuestions: state.multiOption,
+        freeTextQuestion: state.freeText
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_InstructionsCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        multiOptionQuestions: state.multiOption,
+        freeTextQuestion: state.freeText
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_BottomButtonCard__WEBPACK_IMPORTED_MODULE_3__["default"], {
         taskId: this.props.match.params.id
       }));
     }

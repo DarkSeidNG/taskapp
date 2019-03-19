@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\v1;
 
+use App\Http\Resources\TaskResource;
 use App\Mail\TaskCreated;
 use App\Models\Task;
 use App\Models\TaskQuestion;
@@ -86,9 +87,11 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($task_key)
     {
-        //
+        $task = Task::where("task_key", $task_key)->first();
+
+        return response()->json(TaskResource::make($task));
     }
 
     /**
