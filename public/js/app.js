@@ -65613,6 +65613,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
+/***
+ * API base class that will be used to make all api calls
+ * @type {AxiosInstance}
+ */
+
 var API = axios__WEBPACK_IMPORTED_MODULE_0___default.a.create({
   baseURL: '/api/v1',
   timeout: 10000,
@@ -65636,6 +65641,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "questions", function() { return questions; });
 /* harmony import */ var _Api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Api */ "./resources/js/api/Api.js");
 
+/***
+ * This function will be used to make api calls to the questions table
+ * @type {{load: (function(): AxiosPromise<any>)}}
+ */
+
 var questions = {
   load: function load() {
     return _Api__WEBPACK_IMPORTED_MODULE_0__["default"].get('questions');
@@ -65655,6 +65665,11 @@ var questions = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "tasks", function() { return tasks; });
 /* harmony import */ var _Api__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Api */ "./resources/js/api/Api.js");
+
+/***
+ * Function for making api calls for tasks
+ * @type {{load: (function(): AxiosPromise<any>), save: (function(*=): AxiosPromise<any>), taskDetails: (function(*): AxiosPromise<any>), answer: (function(*=): AxiosPromise<any>)}}
+ */
 
 var tasks = {
   load: function load() {
@@ -65915,6 +65930,9 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 
+/***
+ * The card parent class that will be used to wrap all content that needs to be in cards
+ */
 
 var Card =
 /*#__PURE__*/
@@ -65979,6 +65997,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+/***
+ * Component for free text input questions
+ */
 
 var FreeTextQuestion =
 /*#__PURE__*/
@@ -66207,6 +66228,9 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+/***
+ * Component for multiple choice questions
+ */
 
 var MultipleOptionsQuestion =
 /*#__PURE__*/
@@ -66452,8 +66476,12 @@ function (_Component) {
   _createClass(CreateTaskPage, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.loadFromApi();
+      this.loadFromApi(); //load fresh data from the backend once this component is mounted
     }
+    /**
+     * Method to call the backend to retrieve a list of questions
+     */
+
   }, {
     key: "loadFromApi",
     value: function loadFromApi() {
@@ -66469,6 +66497,11 @@ function (_Component) {
         console.log(err);
       });
     }
+    /**
+     * Method to handle input changes
+     * @param e - event
+     */
+
   }, {
     key: "onChange",
     value: function onChange(e) {
@@ -66484,6 +66517,11 @@ function (_Component) {
         task: currentState
       });
     }
+    /**
+     * Method to handle checkbox change events
+     * @param e - event
+     */
+
   }, {
     key: "onCheckboxChange",
     value: function onCheckboxChange(e) {
@@ -66491,6 +66529,11 @@ function (_Component) {
       this.state.task.questions.push(questionId);
       this.setState(this.state);
     }
+    /**
+     * Method to submit task to the backend
+     * @param e - event
+     */
+
   }, {
     key: "onSubmitTask",
     value: function onSubmitTask(e) {
@@ -66520,12 +66563,22 @@ function (_Component) {
         });
       }
     }
+    /**
+     * Helper method to validate email
+     * @param email
+     * @returns {boolean}
+     */
+
   }, {
     key: "validateEmail",
     value: function validateEmail(email) {
       var regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return regexp.test(email);
     }
+    /**
+     * Method to reset state to default values
+     */
+
   }, {
     key: "resetDefault",
     value: function resetDefault() {
@@ -66538,6 +66591,13 @@ function (_Component) {
         }
       });
     }
+    /**
+     * Method to display modal
+     * @param title
+     * @param message
+     * @param status
+     */
+
   }, {
     key: "handleShowModal",
     value: function handleShowModal(title, message, status) {
@@ -66768,12 +66828,20 @@ function (_Component) {
     _this.handleNext = _this.handleNext.bind(_assertThisInitialized(_this));
     return _this;
   }
+  /**
+   * Fetch task details when component mounts
+   */
+
 
   _createClass(QuestionsPage, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       this.loadTaskDetails();
     }
+    /**
+     * Method to fetch task details from the remote backend
+     */
+
   }, {
     key: "loadTaskDetails",
     value: function loadTaskDetails() {
@@ -66790,6 +66858,11 @@ function (_Component) {
         console.log(err);
       });
     }
+    /**
+     * Method to process the data retrieved from the backend and add the required fields to the state
+     * @param data - data retrieved from the backend
+     */
+
   }, {
     key: "processLoadedData",
     value: function processLoadedData(data) {
@@ -66815,6 +66888,10 @@ function (_Component) {
         questions: _questions
       });
     }
+    /**
+     * Method called when save and continue button is clicked
+     */
+
   }, {
     key: "onNextClick",
     value: function onNextClick() {
@@ -66830,9 +66907,7 @@ function (_Component) {
           console.log(res.data);
 
           if (res.data.status === "success") {
-            _this3.handleShowModal("Answer Saved", res.data.message, res.data.status);
-
-            _this3.handleNext();
+            _this3.handleNext(res.data);
           } else if (res.data.status === "error") {
             _this3.handleShowModal("Answer Saved", res.data.message, res.data.status);
           }
@@ -66843,26 +66918,44 @@ function (_Component) {
         alert("Please answer the question before saving");
       }
     }
+    /**
+     * Show modal
+     * @param title
+     * @param message
+     * @param status
+     */
+
   }, {
     key: "handleShowModal",
     value: function handleShowModal(title, message, status) {
       sweetalert__WEBPACK_IMPORTED_MODULE_7___default()(title, message, status);
     }
+    /**
+     * Method to handle moving to the next question after one has been submitted successfully
+     * @param data
+     */
+
   }, {
     key: "handleNext",
-    value: function handleNext() {
+    value: function handleNext(data) {
       if (this.state.questions.length > this.state.question_index + 1) {
         this.setState(_objectSpread({}, this.state, {
           question_index: this.state.question_index + 1,
           can_next: true,
           lastAnswer: ''
         }));
+        this.handleShowModal("Answer Saved", data.message, data.status);
       } else {
         this.setState(_objectSpread({}, this.state, {
           can_next: false
         }));
       }
     }
+    /**
+     * Method to handle answer change from the MultipleOptionsQuestion and FreeTextQuestion components
+     * @param answer
+     */
+
   }, {
     key: "onAnswerChange",
     value: function onAnswerChange(answer) {
@@ -66918,17 +67011,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return TaskCompletePage; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _components_HeaderCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/HeaderCard */ "./resources/js/components/HeaderCard.js");
-/* harmony import */ var _components_FreeTextQuestion__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/FreeTextQuestion */ "./resources/js/components/FreeTextQuestion.js");
-/* harmony import */ var _components_MultipleOptionsQuestion__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/MultipleOptionsQuestion */ "./resources/js/components/MultipleOptionsQuestion.js");
-/* harmony import */ var _components_BottomRightFloatButtonCard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/BottomRightFloatButtonCard */ "./resources/js/components/BottomRightFloatButtonCard.js");
+/* harmony import */ var _components_HeaderCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/HeaderCard */ "./resources/js/components/HeaderCard.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -66938,17 +67022,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-
-
-
 
 
 
@@ -66959,74 +67039,15 @@ function (_Component) {
   _inherits(TaskCompletePage, _Component);
 
   function TaskCompletePage(props) {
-    var _this;
-
     _classCallCheck(this, TaskCompletePage);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(TaskCompletePage).call(this, props));
-    _this.state = {
-      questions: [{
-        question: "",
-        question_type: ""
-      }],
-      question_index: 0,
-      can_next: true
-    };
-    _this.onNextClick = _this.onNextClick.bind(_assertThisInitialized(_this));
-    return _this;
+    return _possibleConstructorReturn(this, _getPrototypeOf(TaskCompletePage).call(this, props));
   }
 
   _createClass(TaskCompletePage, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      for (var i = 0; i < 10; i++) {
-        this.setState({
-          questions: [{
-            question: "What is your name?",
-            question_type: "multi-option",
-            options: [{
-              id: 1,
-              option: "opos"
-            }, {
-              id: 2,
-              option: "bravos"
-            }]
-          }, {
-            question: "What is your fathers name?",
-            question_type: "multi-option",
-            options: [{
-              id: 1,
-              option: "kikus"
-            }, {
-              id: 2,
-              option: "fructas"
-            }]
-          }, {
-            question: "What is your mothers full name?",
-            question_type: "free-text"
-          }]
-        });
-      }
-    }
-  }, {
-    key: "onNextClick",
-    value: function onNextClick() {
-      if (this.state.questions.length > this.state.question_index + 1) {
-        this.setState(_objectSpread({}, this.state, {
-          question_index: this.state.question_index + 1,
-          can_next: true
-        }));
-      } else {
-        this.setState(_objectSpread({}, this.state, {
-          can_next: false
-        }));
-      }
-    }
-  }, {
     key: "render",
     value: function render() {
-      var selectedQuestion = this.state.questions[this.state.question_index];
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_HeaderCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_HeaderCard__WEBPACK_IMPORTED_MODULE_1__["default"], {
         taskTitle: "Senior Software Developer",
         multiOptionQuestions: "3",
         freeTextQuestion: "1"
@@ -67102,12 +67123,20 @@ function (_Component) {
     _this.processLoadedData = _this.processLoadedData.bind(_assertThisInitialized(_this));
     return _this;
   }
+  /**
+   * Fetch task details when component mounts
+   */
+
 
   _createClass(TaskInstructionsPage, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       this.loadTaskDetails();
     }
+    /**
+     * Method to fetch task details from the remote backend
+     */
+
   }, {
     key: "loadTaskDetails",
     value: function loadTaskDetails() {
@@ -67124,6 +67153,11 @@ function (_Component) {
         console.log(err);
       });
     }
+    /**
+     * Method to process the data retrieved from the backend and add the required fields to the state
+     * @param data - data retrieved from the backend
+     */
+
   }, {
     key: "processLoadedData",
     value: function processLoadedData(data) {
@@ -67133,7 +67167,7 @@ function (_Component) {
       var _freeText = 0;
 
       for (var i = 0; i < data.questions.length; i++) {
-        if (data.questions[i].question_type === "multi-option") {
+        if (data.questions[i]['question'].question_type === "multi-option") {
           _multiOption += 1;
         } else {
           _freeText += 1;

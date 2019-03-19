@@ -1,5 +1,9 @@
 import API from '../Api';
 
+/***
+ * Function for making api calls for tasks
+ * @type {{load: (function(): AxiosPromise<any>), save: (function(*=): AxiosPromise<any>), taskDetails: (function(*): AxiosPromise<any>), answer: (function(*=): AxiosPromise<any>)}}
+ */
 export const tasks = {
     load: () => API.get('tasks'),
     save: (task) => API.post('tasks/new', task),

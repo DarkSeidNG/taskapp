@@ -34,10 +34,16 @@ export default class QuestionsPage extends Component {
         this.handleNext = this.handleNext.bind(this);
     }
 
+    /**
+     * Fetch task details when component mounts
+     */
     componentDidMount(){
         this.loadTaskDetails();
     }
 
+    /**
+     * Method to fetch task details from the remote backend
+     */
     loadTaskDetails(){
         const taskKey = this.props.match.params.id;
 
@@ -53,6 +59,10 @@ export default class QuestionsPage extends Component {
             });
     }
 
+    /**
+     * Method to process the data retrieved from the backend and add the required fields to the state
+     * @param data - data retrieved from the backend
+     */
     processLoadedData(data) {
         const _title = data.task_title;
         const _userName = data.user_name;
@@ -79,6 +89,9 @@ export default class QuestionsPage extends Component {
     }
 
 
+    /**
+     * Method called when save and continue button is clicked
+     */
     onNextClick(){
         if(this.state.lastAnswer !== ''){
             const userAnswer = {
@@ -90,8 +103,7 @@ export default class QuestionsPage extends Component {
                 .then(res => {
                     console.log(res.data);
                     if (res.data.status === "success"){
-                        this.handleShowModal("Answer Saved", res.data.message, res.data.status);
-                        this.handleNext();
+                        this.handleNext(res.data);
                     }
                     else if(res.data.status === "error"){
                         this.handleShowModal("Answer Saved", res.data.message, res.data.status);
@@ -108,11 +120,21 @@ export default class QuestionsPage extends Component {
         }
     }
 
+    /**
+     * Show modal
+     * @param title
+     * @param message
+     * @param status
+     */
     handleShowModal(title, message, status) {
         swal(title, message, status);
     }
 
-    handleNext(){
+    /**
+     * Method to handle moving to the next question after one has been submitted successfully
+     * @param data
+     */
+    handleNext(data){
         if (this.state.questions.length > (this.state.question_index + 1)){
             this.setState({
                 ...this.state,
@@ -120,6 +142,7 @@ export default class QuestionsPage extends Component {
                 can_next: true,
                 lastAnswer:'',
             });
+            this.handleShowModal("Answer Saved", data.message, data.status);
         }
         else{
             this.setState({
@@ -129,6 +152,10 @@ export default class QuestionsPage extends Component {
         }
     }
 
+    /**
+     * Method to handle answer change from the MultipleOptionsQuestion and FreeTextQuestion components
+     * @param answer
+     */
     onAnswerChange(answer) {
         this.setState({
             ...this.state,

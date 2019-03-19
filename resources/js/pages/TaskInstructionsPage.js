@@ -18,10 +18,16 @@ export default class TaskInstructionsPage extends Component {
         this.processLoadedData = this.processLoadedData.bind(this);
     }
 
+    /**
+     * Fetch task details when component mounts
+     */
     componentDidMount() {
         this.loadTaskDetails();
     }
 
+    /**
+     * Method to fetch task details from the remote backend
+     */
     loadTaskDetails(){
         const taskKey = this.props.match.params.id;
 
@@ -37,6 +43,10 @@ export default class TaskInstructionsPage extends Component {
             });
     }
 
+    /**
+     * Method to process the data retrieved from the backend and add the required fields to the state
+     * @param data - data retrieved from the backend
+     */
     processLoadedData(data) {
         const _title = data.task_title;
         const _userName = data.user_name;
@@ -44,7 +54,7 @@ export default class TaskInstructionsPage extends Component {
         let _freeText = 0;
 
         for(let i = 0; i < data.questions.length; i++){
-            if(data.questions[i].question_type === "multi-option"){
+            if(data.questions[i]['question'].question_type === "multi-option"){
                 _multiOption += 1;
             }
             else{

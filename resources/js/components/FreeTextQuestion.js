@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Card from './Card';
 
+/***
+ * Component for free text input questions
+ */
 export default class FreeTextQuestion extends Component {
     constructor(props) {
         super(props);

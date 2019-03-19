@@ -10,7 +10,6 @@ export default class CreateTaskPage extends Component {
     constructor(props) {
         super(props);
 
-
         this.state = {
             questions: [],
             task: {
@@ -30,9 +29,12 @@ export default class CreateTaskPage extends Component {
     }
 
     componentDidMount() {
-        this.loadFromApi();
+        this.loadFromApi(); //load fresh data from the backend once this component is mounted
     }
 
+    /**
+     * Method to call the backend to retrieve a list of questions
+     */
     loadFromApi(){
         questions.load()
             .then(res => {
@@ -44,6 +46,10 @@ export default class CreateTaskPage extends Component {
             });
     }
 
+    /**
+     * Method to handle input changes
+     * @param e - event
+     */
     onChange(e) {
         const { task } = { ...this.state };
         const currentState = task;
@@ -53,12 +59,20 @@ export default class CreateTaskPage extends Component {
         this.setState({ task: currentState });
     }
 
+    /**
+     * Method to handle checkbox change events
+     * @param e - event
+     */
     onCheckboxChange(e) {
         const questionId = e.target.value;
         this.state.task.questions.push(questionId);
         this.setState(this.state);
     }
 
+    /**
+     * Method to submit task to the backend
+     * @param e - event
+     */
     onSubmitTask(e) {
         e.preventDefault();
 
@@ -81,7 +95,6 @@ export default class CreateTaskPage extends Component {
                     else {
                         this.handleShowModal("Error", res.data.message, res.data.status );
                     }
-
                 })
                 .catch(err => {
                     console.log(err);
@@ -90,11 +103,19 @@ export default class CreateTaskPage extends Component {
 
     }
 
+    /**
+     * Helper method to validate email
+     * @param email
+     * @returns {boolean}
+     */
     validateEmail (email) {
         const regexp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return regexp.test(email);
     }
 
+    /**
+     * Method to reset state to default values
+     */
     resetDefault(){
         this.setState ({
             task: {
@@ -106,6 +127,12 @@ export default class CreateTaskPage extends Component {
         });
     }
 
+    /**
+     * Method to display modal
+     * @param title
+     * @param message
+     * @param status
+     */
     handleShowModal(title, message, status) {
         swal(title, message, status);
     }

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Card from './Card';
 
+/***
+ * Component for multiple choice questions
+ */
 export default class MultipleOptionsQuestion extends Component {
     constructor(props) {
         super(props);
