@@ -5,17 +5,25 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ExampleTest extends TestCase
+class RoutesTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Test entry route.
      *
      * @return void
      */
-    public function testBasicTest()
+    public function testEntryRoute()
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
     }
+
+    public function testCreateTaskRoute()
+    {
+        $response = $this->get('/tasks');
+
+        $response->assertStatus(200);
+    }
+
 }
