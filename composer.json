@@ -62,7 +62,9 @@
             "php artisan cache:clear",
             "chmod -R 777 public/",
             "php artisan migrate",
-            "php artisan db:seed"
+            "php artisan db:seed",
+            "composer update",
+            "composer require doctrine/dbal"
         ]
     }
 }
