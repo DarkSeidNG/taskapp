@@ -65683,6 +65683,12 @@ var tasks = {
   },
   answer: function answer(task) {
     return _Api__WEBPACK_IMPORTED_MODULE_0__["default"].post('tasks/question/answer', task);
+  },
+  setCompleted: function setCompleted(taskKey) {
+    return _Api__WEBPACK_IMPORTED_MODULE_0__["default"].get('tasks/complete/' + taskKey);
+  },
+  answerDetails: function answerDetails(taskKey) {
+    return _Api__WEBPACK_IMPORTED_MODULE_0__["default"].get('tasks/userAnswers/' + taskKey);
   }
 };
 
@@ -66104,7 +66110,11 @@ function (_Component) {
         className: "title"
       }, "TASK APP"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "task-title"
-      }, props.taskTitle), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, props.taskTitle, " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+        style: {
+          textTransform: 'uppercase'
+        }
+      }, "(", props.taskStatus, ")")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "task-details"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "task-details-item"
@@ -66757,8 +66767,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return QuestionsPage; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _components_HeaderCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/HeaderCard */ "./resources/js/components/HeaderCard.js");
 /* harmony import */ var _components_FreeTextQuestion__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/FreeTextQuestion */ "./resources/js/components/FreeTextQuestion.js");
 /* harmony import */ var _components_MultipleOptionsQuestion__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/MultipleOptionsQuestion */ "./resources/js/components/MultipleOptionsQuestion.js");
@@ -66819,13 +66828,18 @@ function (_Component) {
       userName: '',
       multiOption: 0,
       freeText: 0,
-      lastAnswer: ''
+      lastAnswer: '',
+      taskStatus: 'pending',
+      redirect: false,
+      finished: false
     };
     _this.onNextClick = _this.onNextClick.bind(_assertThisInitialized(_this));
     _this.loadTaskDetails = _this.loadTaskDetails.bind(_assertThisInitialized(_this));
     _this.processLoadedData = _this.processLoadedData.bind(_assertThisInitialized(_this));
     _this.onAnswerChange = _this.onAnswerChange.bind(_assertThisInitialized(_this));
     _this.handleNext = _this.handleNext.bind(_assertThisInitialized(_this));
+    _this.renderRedirect = _this.renderRedirect.bind(_assertThisInitialized(_this));
+    _this.setRedirect = _this.setRedirect.bind(_assertThisInitialized(_this));
     return _this;
   }
   /**
@@ -66853,9 +66867,13 @@ function (_Component) {
 
         if (res.data !== null) {
           _this2.processLoadedData(res.data);
+        } else {
+          _this2.setRedirect();
         }
       }).catch(function (err) {
         console.log(err);
+
+        _this2.setRedirect();
       });
     }
     /**
@@ -66868,6 +66886,7 @@ function (_Component) {
     value: function processLoadedData(data) {
       var _title = data.task_title;
       var _userName = data.user_name;
+      var _taskStatus = data.task_status;
       var _multiOption = 0;
       var _freeText = 0;
       var _questions = data.questions;
@@ -66885,7 +66904,8 @@ function (_Component) {
         userName: _userName,
         multiOption: _multiOption,
         freeText: _freeText,
-        questions: _questions
+        questions: _questions,
+        taskStatus: _taskStatus
       });
     }
     /**
@@ -66913,6 +66933,8 @@ function (_Component) {
           }
         }).catch(function (err) {
           console.log(err);
+
+          _this3.handleShowModal("Error", "An error occured while saving your answer, if you have answered this question before kindly contact the admin to re-create this task, thanks", "error");
         });
       } else {
         alert("Please answer the question before saving");
@@ -66938,6 +66960,8 @@ function (_Component) {
   }, {
     key: "handleNext",
     value: function handleNext(data) {
+      var _this4 = this;
+
       if (this.state.questions.length > this.state.question_index + 1) {
         this.setState(_objectSpread({}, this.state, {
           question_index: this.state.question_index + 1,
@@ -66946,9 +66970,20 @@ function (_Component) {
         }));
         this.handleShowModal("Answer Saved", data.message, data.status);
       } else {
-        this.setState(_objectSpread({}, this.state, {
-          can_next: false
-        }));
+        _api_Services_Tasks__WEBPACK_IMPORTED_MODULE_6__["tasks"].setCompleted(this.props.match.params.id).then(function (res) {
+          console.log(res.data);
+
+          _this4.handleShowModal("Task Completed", res.data.message, res.data.status);
+
+          _this4.setState(_objectSpread({}, _this4.state, {
+            can_next: false,
+            finished: true
+          }));
+        }).catch(function (err) {
+          console.log(err);
+
+          _this4.handleShowModal("Error", "An error occured while finishing this task", "error");
+        });
       }
     }
     /**
@@ -66965,14 +67000,40 @@ function (_Component) {
       console.log(answer);
     }
   }, {
+    key: "setRedirect",
+    value: function setRedirect() {
+      this.setState({
+        redirect: true
+      });
+    }
+  }, {
+    key: "renderRedirect",
+    value: function renderRedirect() {
+      if (this.state.redirect) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
+          to: "/"
+        });
+      }
+    }
+  }, {
+    key: "renderRedirectFinished",
+    value: function renderRedirectFinished() {
+      if (this.state.finished) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
+          to: "/task/".concat(this.props.match.params.id, "/complete")
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       var selectedQuestion = this.state.questions[this.state.question_index]['question'];
       var state = this.state;
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_HeaderCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, this.renderRedirect(), this.renderRedirectFinished(), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_HeaderCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
         taskTitle: state.title,
         multiOptionQuestions: state.multiOption,
-        freeTextQuestion: state.freeText
+        freeTextQuestion: state.freeText,
+        taskStatus: state.taskStatus
       }), selectedQuestion.question_type === "multi-option" ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_MultipleOptionsQuestion__WEBPACK_IMPORTED_MODULE_4__["default"], {
         questionNumber: this.state.question_index + 1,
         question: selectedQuestion.question,
@@ -67011,7 +67072,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return TaskCompletePage; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_HeaderCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/HeaderCard */ "./resources/js/components/HeaderCard.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _components_Card__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Card */ "./resources/js/components/Card.js");
+/* harmony import */ var _api_Services_Tasks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/Services/Tasks */ "./resources/js/api/Services/Tasks.js");
+/* harmony import */ var _img_banner_tasks_png__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../img/banner-tasks.png */ "./resources/img/banner-tasks.png");
+/* harmony import */ var _img_banner_tasks_png__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_img_banner_tasks_png__WEBPACK_IMPORTED_MODULE_4__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -67022,13 +67087,16 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
 
 
 
@@ -67039,18 +67107,114 @@ function (_Component) {
   _inherits(TaskCompletePage, _Component);
 
   function TaskCompletePage(props) {
+    var _this;
+
     _classCallCheck(this, TaskCompletePage);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(TaskCompletePage).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(TaskCompletePage).call(this, props));
+    _this.state = {
+      userName: '',
+      redirect: false,
+      taskDetails: []
+    };
+    _this.renderRedirect = _this.renderRedirect.bind(_assertThisInitialized(_this));
+    _this.setRedirect = _this.setRedirect.bind(_assertThisInitialized(_this));
+    _this.processTaskDetails = _this.processTaskDetails.bind(_assertThisInitialized(_this));
+    return _this;
   }
+  /**
+   * Fetch task details when component mounts
+   */
+
 
   _createClass(TaskCompletePage, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.loadTaskDetails();
+    }
+    /**
+     * Method to fetch task details from the remote backend
+     */
+
+  }, {
+    key: "loadTaskDetails",
+    value: function loadTaskDetails() {
+      var _this2 = this;
+
+      var taskKey = this.props.match.params.id;
+      _api_Services_Tasks__WEBPACK_IMPORTED_MODULE_3__["tasks"].answerDetails(taskKey).then(function (res) {
+        console.log(res.data);
+
+        if (res.data !== null) {
+          _this2.setState({
+            userName: res.data.task.user_name
+          });
+
+          _this2.processTaskDetails(res.data.details);
+        } else {
+          _this2.setRedirect();
+        }
+      }).catch(function (err) {
+        console.log(err);
+
+        _this2.setRedirect();
+      });
+    }
+    /***
+     * Organise the data retrieved from the backend
+     * and add the clean data to the taskDetails state
+     * @param details
+     */
+
+  }, {
+    key: "processTaskDetails",
+    value: function processTaskDetails(details) {
+      for (var i = 0; i < details.length; i++) {
+        var question = details[i].question.question;
+        var status = "pending";
+
+        if (details[i].question.question_type === "multi-option") {
+          if (details[i].question.question_real_answer.question_option_id === details[i].users_answer.selected_question_option_id) {
+            status = "passed";
+          } else {
+            status = "failed";
+          }
+        }
+
+        var detailsJsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, question, " ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+          className: status
+        }, "(", status, ")"));
+        this.state.taskDetails.push(detailsJsx);
+        this.setState(this.state);
+      }
+    }
+  }, {
+    key: "setRedirect",
+    value: function setRedirect() {
+      this.setState({
+        redirect: true
+      });
+    }
+  }, {
+    key: "renderRedirect",
+    value: function renderRedirect() {
+      if (this.state.redirect) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
+          to: "/"
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_HeaderCard__WEBPACK_IMPORTED_MODULE_1__["default"], {
-        taskTitle: "Senior Software Developer",
-        multiOptionQuestions: "3",
-        freeTextQuestion: "1"
+      var state = this.state;
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, this.renderRedirect(), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        src: _img_banner_tasks_png__WEBPACK_IMPORTED_MODULE_4___default.a,
+        width: "100%"
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Card__WEBPACK_IMPORTED_MODULE_2__["default"], null, "Hello ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, this.state.userName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), "Thanks for completing this challenge, the admin will contact you with results soon."), state.taskDetails.map(function (detail, idx) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_Card__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          key: idx
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, detail));
       }));
     }
   }]);
@@ -67074,10 +67238,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return TaskInstructionsPage; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_HeaderCard__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/HeaderCard */ "./resources/js/components/HeaderCard.js");
-/* harmony import */ var _components_InstructionsCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/InstructionsCard */ "./resources/js/components/InstructionsCard.js");
-/* harmony import */ var _components_BottomButtonCard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/BottomButtonCard */ "./resources/js/components/BottomButtonCard.js");
-/* harmony import */ var _api_Services_Tasks__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../api/Services/Tasks */ "./resources/js/api/Services/Tasks.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var _components_HeaderCard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/HeaderCard */ "./resources/js/components/HeaderCard.js");
+/* harmony import */ var _components_InstructionsCard__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/InstructionsCard */ "./resources/js/components/InstructionsCard.js");
+/* harmony import */ var _components_BottomButtonCard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/BottomButtonCard */ "./resources/js/components/BottomButtonCard.js");
+/* harmony import */ var _api_Services_Tasks__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../api/Services/Tasks */ "./resources/js/api/Services/Tasks.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -67102,6 +67267,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var TaskInstructionsPage =
 /*#__PURE__*/
 function (_Component) {
@@ -67117,10 +67283,14 @@ function (_Component) {
       title: '',
       userName: '',
       multiOption: 0,
-      freeText: 0
+      freeText: 0,
+      taskStatus: 'pending',
+      redirect: false
     };
     _this.loadTaskDetails = _this.loadTaskDetails.bind(_assertThisInitialized(_this));
     _this.processLoadedData = _this.processLoadedData.bind(_assertThisInitialized(_this));
+    _this.renderRedirect = _this.renderRedirect.bind(_assertThisInitialized(_this));
+    _this.setRedirect = _this.setRedirect.bind(_assertThisInitialized(_this));
     return _this;
   }
   /**
@@ -67143,14 +67313,18 @@ function (_Component) {
       var _this2 = this;
 
       var taskKey = this.props.match.params.id;
-      _api_Services_Tasks__WEBPACK_IMPORTED_MODULE_4__["tasks"].taskDetails(taskKey).then(function (res) {
+      _api_Services_Tasks__WEBPACK_IMPORTED_MODULE_5__["tasks"].taskDetails(taskKey).then(function (res) {
         console.log(res.data);
 
         if (res.data !== null) {
           _this2.processLoadedData(res.data);
+        } else {
+          _this2.setRedirect();
         }
       }).catch(function (err) {
         console.log(err);
+
+        _this2.setRedirect();
       });
     }
     /**
@@ -67163,6 +67337,7 @@ function (_Component) {
     value: function processLoadedData(data) {
       var _title = data.task_title;
       var _userName = data.user_name;
+      var _taskStatus = data.task_status;
       var _multiOption = 0;
       var _freeText = 0;
 
@@ -67178,21 +67353,39 @@ function (_Component) {
         title: _title,
         userName: _userName,
         multiOption: _multiOption,
-        freeText: _freeText
+        freeText: _freeText,
+        taskStatus: _taskStatus
       });
+    }
+  }, {
+    key: "setRedirect",
+    value: function setRedirect() {
+      this.setState({
+        redirect: true
+      });
+    }
+  }, {
+    key: "renderRedirect",
+    value: function renderRedirect() {
+      if (this.state.redirect) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], {
+          to: "/"
+        });
+      }
     }
   }, {
     key: "render",
     value: function render() {
       var state = this.state;
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_HeaderCard__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, this.renderRedirect(), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_HeaderCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
         taskTitle: state.title,
         multiOptionQuestions: state.multiOption,
-        freeTextQuestion: state.freeText
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_InstructionsCard__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        freeTextQuestion: state.freeText,
+        taskStatus: state.taskStatus
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_InstructionsCard__WEBPACK_IMPORTED_MODULE_3__["default"], {
         multiOptionQuestions: state.multiOption,
         freeTextQuestion: state.freeText
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_BottomButtonCard__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_BottomButtonCard__WEBPACK_IMPORTED_MODULE_4__["default"], {
         taskId: this.props.match.params.id
       }));
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\v1;
 
+use App\Http\Resources\TaskAnswersResource;
 use App\Http\Resources\TaskResource;
 use App\Mail\TaskCreated;
 use App\Models\Task;
@@ -73,6 +74,39 @@ class TaskController extends Controller
         $task = Task::where("task_key", $task_key)->first();
 
         return response()->json(TaskResource::make($task));
+    }
+
+
+    /***
+     * Change the status of the task to completed
+     * @param $taskKey
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function setAsCompleted($taskKey)
+    {
+        $task = Task::where("task_key", $taskKey)->first();
+        $task->task_status = "completed";
+        $task->save();
+
+        $response['status'] =  'success';
+        $response['message'] =  'Task completed successfully';
+        return response()->json($response);
+    }
+
+    /***
+     * Retrieve details of a task
+     * i.e answers and the correctness of the answers
+     * @param $taskKey
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function taskAnswers($taskKey) {
+        $task = Task::where("task_key", $taskKey)->first();
+
+        $response = array(
+            'task' => $task,
+            'details' => TaskAnswersResource::collection($task->questions),
+        );
+        return response()->json($response);
     }
 
 }

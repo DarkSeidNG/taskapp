@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import { Redirect } from 'react-router-dom'
 import HeaderCard from '../components/HeaderCard';
 import FreeTextQuestion from '../components/FreeTextQuestion';
 import MultipleOptionsQuestion from '../components/MultipleOptionsQuestion';
@@ -25,6 +25,9 @@ export default class QuestionsPage extends Component {
             multiOption: 0,
             freeText: 0,
             lastAnswer: '',
+            taskStatus: 'pending',
+            redirect: false,
+            finished: false,
         };
 
         this.onNextClick = this.onNextClick.bind(this);
@@ -32,6 +35,8 @@ export default class QuestionsPage extends Component {
         this.processLoadedData = this.processLoadedData.bind(this);
         this.onAnswerChange = this.onAnswerChange.bind(this);
         this.handleNext = this.handleNext.bind(this);
+        this.renderRedirect = this.renderRedirect.bind(this);
+        this.setRedirect = this.setRedirect.bind(this);
     }
 
     /**
@@ -53,9 +58,13 @@ export default class QuestionsPage extends Component {
                 if (res.data !== null){
                     this.processLoadedData(res.data);
                 }
+                else {
+                    this.setRedirect();
+                }
             })
             .catch(err => {
                 console.log(err);
+                this.setRedirect();
             });
     }
 
@@ -66,6 +75,7 @@ export default class QuestionsPage extends Component {
     processLoadedData(data) {
         const _title = data.task_title;
         const _userName = data.user_name;
+        const _taskStatus = data.task_status;
         let _multiOption = 0;
         let _freeText = 0;
         const _questions = data.questions;
@@ -85,6 +95,7 @@ export default class QuestionsPage extends Component {
             multiOption: _multiOption,
             freeText: _freeText,
             questions: _questions,
+            taskStatus: _taskStatus,
         })
     }
 
@@ -111,6 +122,7 @@ export default class QuestionsPage extends Component {
                 })
                 .catch(err => {
                     console.log(err);
+                    this.handleShowModal("Error", "An error occured while saving your answer, if you have answered this question before kindly contact the admin to re-create this task, thanks", "error");
                 });
 
 
@@ -145,10 +157,21 @@ export default class QuestionsPage extends Component {
             this.handleShowModal("Answer Saved", data.message, data.status);
         }
         else{
-            this.setState({
-                ...this.state,
-                can_next: false,
-            });
+            tasks.setCompleted(this.props.match.params.id)
+                .then(res => {
+                    console.log(res.data);
+                    this.handleShowModal("Task Completed", res.data.message, res.data.status);
+                    this.setState({
+                        ...this.state,
+                        can_next: false,
+                        finished: true,
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.handleShowModal("Error", "An error occured while finishing this task", "error");
+                });
+
         }
     }
 
@@ -165,15 +188,36 @@ export default class QuestionsPage extends Component {
         console.log(answer);
     }
 
+    setRedirect() {
+        this.setState({
+            redirect: true
+        })
+    }
+
+    renderRedirect () {
+        if (this.state.redirect) {
+            return <Redirect to='/' />
+        }
+    }
+
+    renderRedirectFinished () {
+        if (this.state.finished) {
+            return <Redirect to={`/task/${this.props.match.params.id}/complete`} />
+        }
+    }
+
     render() {
         const selectedQuestion = this.state.questions[this.state.question_index]['question'];
         const state = this.state;
         return (
             <React.Fragment>
+                {this.renderRedirect()}
+                {this.renderRedirectFinished()}
                 <HeaderCard
                     taskTitle={state.title}
                     multiOptionQuestions={state.multiOption}
-                    freeTextQuestion={state.freeText}/>
+                    freeTextQuestion={state.freeText}
+                    taskStatus={state.taskStatus}/>
 
                 {selectedQuestion.question_type === "multi-option" ?
                     (

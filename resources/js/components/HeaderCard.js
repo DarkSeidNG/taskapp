@@ -8,7 +8,7 @@ export default class HeaderCard extends Component {
         return (
             <Card>
                 <div className="title">TASK APP</div>
-                <div className="task-title">{props.taskTitle}</div>
+                <div className="task-title">{props.taskTitle} <span style={{textTransform: 'uppercase'}}>({props.taskStatus})</span></div>
                 <div className="task-details">
                     <div className="task-details-item">
                         <img height="17" src={icon_task} /> <span className="option-total">{props.multiOptionQuestions}</span> Multiple Choice Questions

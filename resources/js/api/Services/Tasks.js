@@ -9,4 +9,6 @@ export const tasks = {
     save: (task) => API.post('tasks/new', task),
     taskDetails: (taskKey) => API.get('tasks/' + taskKey),
     answer: (task) => API.post('tasks/question/answer', task),
+    setCompleted: (taskKey) => API.get('tasks/complete/' + taskKey),
+    answerDetails: (taskKey) => API.get('tasks/userAnswers/' + taskKey),
 };

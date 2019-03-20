@@ -20,4 +20,6 @@ Route::group(['prefix' => 'v1', 'middleware' => 'api'], function() {
     Route::post('/tasks/new', 'API\v1\TaskController@store');
     Route::get('/tasks/{task}', 'API\v1\TaskController@show');
     Route::post('/tasks/question/answer', 'API\v1\UserAnswerController@store');
+    Route::get('/tasks/complete/{taskKey}', 'API\v1\TaskController@setAsCompleted');
+    Route::get('/tasks/userAnswers/{taskKey}', 'API\v1\TaskController@taskAnswers');
 });

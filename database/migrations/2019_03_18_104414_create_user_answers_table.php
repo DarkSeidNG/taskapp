@@ -15,7 +15,7 @@ class CreateUserAnswersTable extends Migration
     {
         Schema::create('user_answers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger("task_question_id");
+            $table->unsignedBigInteger("task_question_id")->unique();
             $table->unsignedBigInteger("selected_question_option_id")->nullable();
             $table->text("text_answer")->nullable();
             $table->string("answer_type");

@@ -10732,3 +10732,11 @@ a.text-dark:focus {
   margin-top: 20px;
 }
 
+.failed {
+  color: red;
+}
+
+.passed {
+  color: green;
+}
+

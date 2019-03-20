@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom'
 import HeaderCard from '../components/HeaderCard';
 import InstructionsCard from '../components/InstructionsCard';
 import BottomButtonCard from '../components/BottomButtonCard';
 import {tasks} from "../api/Services/Tasks";
+
 
 export default class TaskInstructionsPage extends Component {
     constructor(props) {
@@ -12,10 +14,14 @@ export default class TaskInstructionsPage extends Component {
             userName: '',
             multiOption: 0,
             freeText: 0,
+            taskStatus: 'pending',
+            redirect: false,
         };
 
         this.loadTaskDetails = this.loadTaskDetails.bind(this);
         this.processLoadedData = this.processLoadedData.bind(this);
+        this.renderRedirect = this.renderRedirect.bind(this);
+        this.setRedirect = this.setRedirect.bind(this);
     }
 
     /**
@@ -37,9 +43,13 @@ export default class TaskInstructionsPage extends Component {
                 if (res.data !== null){
                     this.processLoadedData(res.data);
                 }
+                else{
+                    this.setRedirect();
+                }
             })
             .catch(err => {
                 console.log(err);
+                this.setRedirect();
             });
     }
 
@@ -50,6 +60,7 @@ export default class TaskInstructionsPage extends Component {
     processLoadedData(data) {
         const _title = data.task_title;
         const _userName = data.user_name;
+        const _taskStatus = data.task_status;
         let _multiOption = 0;
         let _freeText = 0;
 
@@ -67,17 +78,32 @@ export default class TaskInstructionsPage extends Component {
             userName: _userName,
             multiOption: _multiOption,
             freeText: _freeText,
+            taskStatus: _taskStatus,
         })
+    }
+
+    setRedirect() {
+        this.setState({
+            redirect: true
+        })
+    }
+
+    renderRedirect () {
+        if (this.state.redirect) {
+            return <Redirect to='/' />
+        }
     }
 
     render() {
         const state = this.state;
         return (
             <React.Fragment>
+                {this.renderRedirect()}
                 <HeaderCard
                     taskTitle={state.title}
                     multiOptionQuestions={state.multiOption}
-                    freeTextQuestion={state.freeText}/>
+                    freeTextQuestion={state.freeText}
+                    taskStatus={state.taskStatus}/>
 
                 <InstructionsCard
                     multiOptionQuestions={state.multiOption}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\v1;
 
+use App\Models\Task;
 use App\Models\UserAnswer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
