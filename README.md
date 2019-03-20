@@ -88,7 +88,7 @@ The Models are in the app > Models directory and the following models exist
 
 The ReactJs files are located in the resources > js directory and the directory structure is as follows
 * api - contains a Services directory that contains two api helpers 
-  * Question.js - for performing calls to the questions endpoint
+  * Questions.js - for performing calls to the questions endpoint
   * Tasks.js - for performing calls to the tasks endpoint
 * components - This directory contains all the reusable components that pages in the app uses
 * defaults - This directory contains a single file `App.js` and this file is the default parent of the app and is where the apps js routtes are defined
