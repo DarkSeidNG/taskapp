@@ -67146,6 +67146,10 @@ function (_Component) {
         console.log(res.data);
 
         if (res.data !== null) {
+          if (res.data.task.task_status !== "completed") {
+            _this2.setRedirect();
+          }
+
           _this2.setState({
             userName: res.data.task.user_name
           });

@@ -36,6 +36,9 @@ export default class TaskCompletePage extends Component {
             .then(res => {
                 console.log(res.data);
                 if (res.data !== null){
+                    if (res.data.task.task_status !== "completed") {
+                        this.setRedirect();
+                    }
                     this.setState({
                         userName: res.data.task.user_name,
                     });
