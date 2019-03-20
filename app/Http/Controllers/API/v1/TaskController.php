@@ -59,6 +59,10 @@ class TaskController extends Controller
         }
     }
 
+    /**
+     * Send the challenge mail to the email entered while creating the task
+     * @param $task
+     */
     public function sendTaskMail($task){
         Mail::to($task->user_email)->queue(new TaskCreated($task));
     }

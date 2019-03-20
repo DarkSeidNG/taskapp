@@ -59,6 +59,45 @@ Managing created tasks is not possible now from a GUI except by directly manipul
 
 The ability to go back to completed tasks to see results has not been added and will be added in the future.
 
+What's going on?
+-
+The app controllers are in the controllers directory in API > v1, 
+and there are three controllers in that directory.
 
+**QuestionController.php** - This controller handles one api call
+ `/api/v1/questions` (Returns a json object containing all questions stored in the database) 
+ 
+ **TaskController.php** - This controller handles four major api calls
+ * `api/v1/tasks/new` - create new tasks
+ * `api/v1/tasks/{task}` - Retrieve a task it accepts a parameter (task) which represents the task_key
+ * `api/v1/tasks/complete/{taskKey}` - Set the task status to completed , signaling that the said task is complete
+ * `api/v1/tasks/userAnswers/{taskKey}` - Retrieve the questions and answers provided for a particular task
+ 
+ **UserAnswerController.php** - This controller handles one api call 
+ * `api/v1/tasks/question/answer` - Store users answer
+ 
+The api endpoints are in the api.php route in the routes directory
+
+The Models are in the app > Models directory and the following models exist
+* Question.php - The questions
+* QuestionOption.php - The option for multi-choice questions
+* RealAnswer.php - The real answer for a multi-choice question
+* Task.php - A single task created for an inividual
+* TaskQuestion.php - The questions added to a particular task
+* UserAnswer.php - The answer to a TaskQuestion provided by the user
+
+The ReactJs files are located in the resources > js directory and the directory structure is as follows
+* api - contains a Services directory that contains two api helpers 
+  * Question.js - for performing calls to the questions endpoint
+  * Tasks.js - for performing calls to the tasks endpoint
+* components - This directory contains all the reusable components that pages in the app uses
+* defaults - This directory contains a single file `App.js` and this file is the default parent of the app and is where the apps js routtes are defined
+* pages - this directory contains the apps web pages
+    * CreateTaskPage - the page for creating tasks (url - /task)
+    * HomePage - the landing page (url - /)
+    * QuestionsPage - the page where the user solves the challenges (url - /tasks/{api_key}/questions)
+    * TaskCompletePage - the page displayed after the task is completed (url - /tasks/{api_key}/complete)
+    * TaskInstructionsPage - the page the user lands on when they click on the start challenge button in the mail sent (url - /tasks/{api_key})
+    
 ## Author
 * **[Ifeanyi Orji](ifeanyicorji@gmail.com)**
