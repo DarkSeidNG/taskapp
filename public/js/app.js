@@ -66317,7 +66317,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-/* harmony import */ var _pages_TaskInstructionsPage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../pages/TaskInstructionsPage */ "./resources/js/pages/TaskInstructionsPage.js");
+/* harmony import */ var _pages_TaskInstructionsPage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../pages/TaskInstructionsPage */ "./resources/js/pages/TaskInstructionsPage.test.js");
 /* harmony import */ var _pages_QuestionsPage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../pages/QuestionsPage */ "./resources/js/pages/QuestionsPage.js");
 /* harmony import */ var _pages_TaskCompletePage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../pages/TaskCompletePage */ "./resources/js/pages/TaskCompletePage.js");
 /* harmony import */ var _pages_HomePage__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../pages/HomePage */ "./resources/js/pages/HomePage.js");
@@ -67232,7 +67232,7 @@ function (_Component) {
 
 /***/ "./resources/js/pages/TaskInstructionsPage.js":
 /*!****************************************************!*\
-  !*** ./resources/js/pages/TaskInstructionsPage.js ***!
+  !*** ./resources/js/pages/TaskInstructionsPage.test.js ***!
   \****************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
