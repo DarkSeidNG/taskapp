@@ -31,6 +31,9 @@ Easily create and send tasks to people and get them to perform the task and
 * Run `npm install` to install node dependencies
 * Run `php artisan migrate:refresh` to reinitialize the database (A database.sqlite database has been added to the database directory)
 * Run `php artisan db:seed` to add demo questions to the database
+* Run `npm run watch` to build the react scripts
+* Run `php artisan serve` to run the laravel project
+
 
 Directory Structure
 -
